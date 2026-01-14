@@ -60,11 +60,11 @@ public class Package implements Serializable{
 		this.expectedDeliveryDate = expectedDeliveryDate;
 	}
 
-	public PackageStatus getStatus() {
+	public PackageStatus getCurrentStatus() {
 		return currentStatus;
 	}
 
-	public void setStatus(PackageStatus currentStatus) {
+	public void setCurrentStatus(PackageStatus currentStatus) {
 		this.currentStatus = currentStatus;
 	}
 

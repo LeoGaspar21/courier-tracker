@@ -13,10 +13,10 @@ public class TrackingEvent {
 		
 	}
 	
-	public TrackingEvent(PackageStatus status, LocalDateTime date, String location) {
+	public TrackingEvent(PackageStatus status,  String location) {
 		super();
 		this.status = status;
-		this.date = date;
+		this.date = LocalDateTime.now();
 		this.location = location;
 	}
 
