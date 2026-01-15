@@ -8,36 +8,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leogaspar.couriertracker.dto.PackageCreateDTO;
+import com.leogaspar.couriertracker.dto.PackageResponseDTO;
+import com.leogaspar.couriertracker.dto.TrackingEventDTO;
+import com.leogaspar.couriertracker.dto.TrackingEventResponseDTO;
 import com.leogaspar.couriertracker.entity.Package;
 import com.leogaspar.couriertracker.entity.TrackingEvent;
+import com.leogaspar.couriertracker.repositories.PackageRepository;
 import com.leogaspar.couriertracker.service.PackageService;
 
 @RestController
 @RequestMapping(value = "/packages")
 public class PackageResource {
-	
+
 	private final PackageService service;
-	
-	
-	public PackageResource(PackageService service) {
+
+	public PackageResource(PackageService service, PackageRepository packageRepository) {
 		this.service = service;
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Package> createPackage(@RequestBody Package pkg){
-		Package newPackage = service.createPackage(pkg.getRecipientName(), pkg.getExpectedDeliveryDate());
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(newPackage);
-		
+	public ResponseEntity<PackageResponseDTO> createPackage(@RequestBody PackageCreateDTO dto) {
+		Package newPackage = service.createPackage(dto.getRecipientName(), dto.getExpectedDeliveryDate());
+		PackageResponseDTO response = new PackageResponseDTO(newPackage.getTrackingCode(),
+				newPackage.getRecipientName(), newPackage.getExpectedDeliveryDate(), newPackage.getCurrentStatus());
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
 	}
-	
+
 	@PostMapping(value = "/{trackingCode}/events")
-	public ResponseEntity<TrackingEvent> addTrackingEvent(@PathVariable String trackingCode, @RequestBody TrackingEvent tE) {
-		TrackingEvent newTE = service.addTrackingEvent(trackingCode, tE.getStatus(), tE.getLocation());
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(newTE);
-		
+	public ResponseEntity<TrackingEventResponseDTO> addTrackingEvent(@PathVariable String trackingCode,
+			@RequestBody TrackingEventDTO tEDTO) {
+		TrackingEvent newTE = service.addTrackingEvent(trackingCode, tEDTO.getStatus(), tEDTO.getLocation());
+		TrackingEventResponseDTO response = new TrackingEventResponseDTO(newTE.getStatus(), newTE.getLocation(),
+				newTE.getDate());
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
 	}
-	
-		
+
 }
