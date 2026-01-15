@@ -1,6 +1,7 @@
 package com.leogaspar.couriertracker.service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,9 @@ public class PackageService {
 	}
 	
 	 
-	public Package createPackage(String trackingCode, String recipientName, LocalDateTime expectedDeliveredDate) {
+	public Package createPackage(String recipientName, LocalDateTime expectedDeliveredDate) {
+		
+		String trackingCode = generateTrackingCode();
 		Package newPackage = new Package(trackingCode, recipientName, expectedDeliveredDate, PackageStatus.POSTED);
 		
 		repository.save(newPackage);
@@ -44,6 +47,10 @@ public class PackageService {
 		repository.save(pkg);
 		
 		return event;
+	}
+	
+	private String generateTrackingCode() {
+		return UUID.randomUUID().toString().substring(0, 10);
 	}
 	
 	
