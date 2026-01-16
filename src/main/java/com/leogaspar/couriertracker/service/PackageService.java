@@ -1,6 +1,7 @@
 package com.leogaspar.couriertracker.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -51,6 +52,10 @@ public class PackageService {
 	
 	private String generateTrackingCode() {
 		return UUID.randomUUID().toString().substring(0, 10);
+	}
+	
+	public List<Package> getAllPackages(){
+		return repository.findAll();
 	}
 	
 	
