@@ -55,8 +55,28 @@ public class PackageResource {
 	public ResponseEntity<List<PackageResponseDTO>> getAllPackages() {
 		List<PackageResponseDTO> response = service.getAllPackages().stream()
 				.map(pkg -> new PackageResponseDTO(pkg.getTrackingCode(), pkg.getRecipientName(),
-						pkg.getExpectedDeliveryDate(), pkg.getCurrentStatus())).toList();
+						pkg.getExpectedDeliveryDate(), pkg.getCurrentStatus()))
+				.toList();
 		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping(value = "/{trackingCode}")
+	public ResponseEntity<PackageResponseDTO> getPackageByTrackingCode(@PathVariable String trackingCode) {
+		Package pkg = service.getPackageByTrackingCode(trackingCode);
+		PackageResponseDTO response = new PackageResponseDTO(pkg.getTrackingCode(), pkg.getRecipientName(),
+				pkg.getExpectedDeliveryDate(), pkg.getCurrentStatus());
+
+		return ResponseEntity.ok().body(response);
+	}
+
+	@GetMapping("/{trackingCode}/events")
+	public ResponseEntity<List<TrackingEventResponseDTO>> getTrackingEvents(@PathVariable String trackingCode) {
+
+		List<TrackingEventResponseDTO> response = service.getTrackingEvents(trackingCode).stream()
+				.map(event -> new TrackingEventResponseDTO(event.getStatus(), event.getLocation(), event.getDate()))
+				.toList();
+
+		return ResponseEntity.ok(response);
 	}
 
 }

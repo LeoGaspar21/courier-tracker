@@ -58,6 +58,20 @@ public class PackageService {
 		return repository.findAll();
 	}
 	
+	public Package getPackageByTrackingCode(String strackingCode) {
+		Package pkg = repository.findById(strackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Note Found"));
+		
+		return pkg;
+		
+		
+	}
+	public List<TrackingEvent> getTrackingEvents(String trackingCode) {
+	    Package pkg = repository.findById(trackingCode)
+	            .orElseThrow(() -> new ObjectNotFoundException("TrackingCode Not Found"));
+
+	    return pkg.getEvents();
+	} 
+	
 	
 	
 }
