@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,9 +88,15 @@ public class PackageResource {
 		PackageResponseDTO response = new PackageResponseDTO(updatePkg.getTrackingCode(), updatePkg.getRecipientName(),
 				updatePkg.getExpectedDeliveryDate(), updatePkg.getCurrentStatus());
 		
-		return ResponseEntity.ok().body(response);
-		
-		
+		return ResponseEntity.ok().body(response);	
 	}
+	
+	@DeleteMapping("/{trackingCode}")
+	public ResponseEntity<Void> deletePackage(@PathVariable String trackingCode) {
+		service.deletePackage(trackingCode);
+		
+		return ResponseEntity.noContent().build();
+	}
+	
 
 }

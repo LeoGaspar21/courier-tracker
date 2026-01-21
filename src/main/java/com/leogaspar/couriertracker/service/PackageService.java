@@ -84,6 +84,11 @@ public class PackageService {
 		
 	}
 	
+	public void deletePackage(String trackingCode) {
+		Package pkg = repository.findById(trackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Not Found"));
+		repository.delete(pkg);
+	}
+	
 	
 	
 }
