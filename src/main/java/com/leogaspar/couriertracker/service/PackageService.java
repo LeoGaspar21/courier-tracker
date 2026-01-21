@@ -59,7 +59,7 @@ public class PackageService {
 	}
 	
 	public Package getPackageByTrackingCode(String strackingCode) {
-		Package pkg = repository.findById(strackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Note Found"));
+		Package pkg = repository.findById(strackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Not Found"));
 		
 		return pkg;
 		
@@ -71,6 +71,18 @@ public class PackageService {
 
 	    return pkg.getEvents();
 	} 
+	
+	public Package updatePackage(String trackingCode, String recipientName,LocalDateTime expectedDeliveredDate) {
+		Package updatePkg = repository.findById(trackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Not Found"));
+		
+		updatePkg.setRecipientName(recipientName); 
+		updatePkg.setExpectedDeliveryDate(expectedDeliveredDate);
+		
+		repository.save(updatePkg);
+		
+		return updatePkg;
+		
+	}
 	
 	
 	
