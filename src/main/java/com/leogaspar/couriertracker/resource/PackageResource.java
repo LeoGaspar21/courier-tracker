@@ -17,8 +17,9 @@ import com.leogaspar.couriertracker.dto.TrackingEventDTO;
 import com.leogaspar.couriertracker.dto.TrackingEventResponseDTO;
 import com.leogaspar.couriertracker.entity.Package;
 import com.leogaspar.couriertracker.entity.TrackingEvent;
-import com.leogaspar.couriertracker.repositories.PackageRepository;
 import com.leogaspar.couriertracker.service.PackageService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/packages")
@@ -26,12 +27,12 @@ public class PackageResource {
 
 	private final PackageService service;
 
-	public PackageResource(PackageService service, PackageRepository packageRepository) {
+	public PackageResource(PackageService service) {
 		this.service = service;
 	}
 
 	@PostMapping
-	public ResponseEntity<PackageResponseDTO> createPackage(@RequestBody PackageCreateDTO dto) {
+	public ResponseEntity<PackageResponseDTO> createPackage(@Valid @RequestBody PackageCreateDTO dto) {
 		Package newPackage = service.createPackage(dto.getRecipientName(), dto.getExpectedDeliveryDate());
 		PackageResponseDTO response = new PackageResponseDTO(newPackage.getTrackingCode(),
 				newPackage.getRecipientName(), newPackage.getExpectedDeliveryDate(), newPackage.getCurrentStatus());
@@ -41,7 +42,7 @@ public class PackageResource {
 	}
 
 	@PostMapping(value = "/{trackingCode}/events")
-	public ResponseEntity<TrackingEventResponseDTO> addTrackingEvent(@PathVariable String trackingCode,
+	public ResponseEntity<TrackingEventResponseDTO> addTrackingEvent(@Valid @PathVariable String trackingCode,
 			@RequestBody TrackingEventDTO tEDTO) {
 		TrackingEvent newTE = service.addTrackingEvent(trackingCode, tEDTO.getStatus(), tEDTO.getLocation());
 		TrackingEventResponseDTO response = new TrackingEventResponseDTO(newTE.getStatus(), newTE.getLocation(),

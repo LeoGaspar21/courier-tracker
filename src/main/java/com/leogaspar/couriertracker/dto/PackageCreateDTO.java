@@ -2,9 +2,17 @@ package com.leogaspar.couriertracker.dto;
 
 import java.time.LocalDateTime;
 
-public class PackageCreateDTO {
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+public class PackageCreateDTO {
+	
+	@NotBlank(message = "Recipient must have a name")
 	private String recipientName;
+	
+	@NotNull(message = "Can't be null")
+	@Future(message = "Must be a future date")
 	private LocalDateTime expectedDeliveryDate;
 
 	public PackageCreateDTO(String recipientName, LocalDateTime expectedDeliveryDate) {
