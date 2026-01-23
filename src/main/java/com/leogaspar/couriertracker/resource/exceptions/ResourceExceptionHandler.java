@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.leogaspar.couriertracker.service.exception.BusinessException;
 import com.leogaspar.couriertracker.service.exception.ObjectNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,15 @@ public class ResourceExceptionHandler {
 				request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 
+	}
+	
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<StandardError> business(BusinessException e, HttpServletRequest request) {
+		HttpStatus status = HttpStatus.CONFLICT;
+		StandardError err = new StandardError(System.currentTimeMillis(), status.value(), e.getMessage(),"Delivered packages can't be deleted",
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(err);
+		
 	}
 
 }

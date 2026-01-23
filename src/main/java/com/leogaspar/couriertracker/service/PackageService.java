@@ -10,6 +10,7 @@ import com.leogaspar.couriertracker.entity.Package;
 import com.leogaspar.couriertracker.entity.PackageStatus;
 import com.leogaspar.couriertracker.entity.TrackingEvent;
 import com.leogaspar.couriertracker.repositories.PackageRepository;
+import com.leogaspar.couriertracker.service.exception.BusinessException;
 import com.leogaspar.couriertracker.service.exception.ObjectNotFoundException;
 
 
@@ -86,7 +87,13 @@ public class PackageService {
 	
 	public void deletePackage(String trackingCode) {
 		Package pkg = repository.findById(trackingCode).orElseThrow(() -> new ObjectNotFoundException("TrackingCode Not Found"));
-		repository.delete(pkg);
+		
+		if (pkg.getCurrentStatus() == PackageStatus.DELIVERED) {
+			throw new BusinessException("Delivered packages can't be deleted");
+		}
+		
+		repository.delete(pkg);			
+		
 	}
 	
 	
