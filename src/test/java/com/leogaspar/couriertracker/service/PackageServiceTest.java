@@ -1,6 +1,7 @@
 package com.leogaspar.couriertracker.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
@@ -60,6 +61,21 @@ class PackageServiceTest {
 		
 		Mockito.verify(repository).delete(pkg);
 		
+		
+	}
+	
+	@Test
+	void shouldUpdatePackageWhenTrackingCodeExists() {
+		Package pkg = new Package("TRACK794", "Mia Takamura", LocalDateTime.now(), PackageStatus.POSTED);
+		
+		Mockito.when(repository.findById("TRACK794")).thenReturn(Optional.of(pkg));
+		
+		Package updated = service.updatePackage("TRACK794", "Jean Grey", LocalDateTime.of(2026, 1, 27, 12, 0));
+		
+		assertEquals("Jean Grey", updated.getRecipientName());
+		assertEquals(LocalDateTime.of(2026, 1, 27, 12, 0), updated.getExpectedDeliveryDate());
+		
+		Mockito.verify(repository).save(updated);
 		
 	}
 	
